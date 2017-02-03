@@ -1,0 +1,22 @@
+09:54:53 **** Build of configuration Debug for project LPC1769_CMSIS_MCU_blinky ****
+make all 
+Building file: ../src/cr_startup_lpc176x.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__USE_CMSIS=CMSISv1p30_LPC17xx -DDEBUG -D__CODE_RED -D__REDLIB__ -I"F:\EE2024 assig2 workplace\Lib_CMSISv1p30_LPC17xx\inc" -I"F:\EE2024 assig2 workplace\Lib_MCU\inc" -O0 -Os -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/cr_startup_lpc176x.d" -MT"src/cr_startup_lpc176x.d" -o "src/cr_startup_lpc176x.o" "../src/cr_startup_lpc176x.c"
+Finished building: ../src/cr_startup_lpc176x.c
+ 
+Building file: ../src/main.c
+Invoking: MCU C Compiler
+arm-none-eabi-gcc -D__USE_CMSIS=CMSISv1p30_LPC17xx -DDEBUG -D__CODE_RED -D__REDLIB__ -I"F:\EE2024 assig2 workplace\Lib_CMSISv1p30_LPC17xx\inc" -I"F:\EE2024 assig2 workplace\Lib_MCU\inc" -O0 -g3 -Wall -c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -mcpu=cortex-m3 -mthumb -MMD -MP -MF"src/main.d" -MT"src/main.d" -o "src/main.o" "../src/main.c"
+Finished building: ../src/main.c
+ 
+Building target: LPC1769_CMSIS_MCU_blinky.axf
+Invoking: MCU Linker
+arm-none-eabi-gcc -nostdlib -L"F:\EE2024 assig2 workplace\Lib_CMSISv1p30_LPC17xx\Debug" -L"F:\EE2024 assig2 workplace\Lib_MCU\Debug" -Xlinker -Map=LPC1769_CMSIS_MCU_blinky.map -Xlinker --gc-sections -mcpu=cortex-m3 -mthumb -T "LPC1769_CMSIS_MCU_blinky_Debug.ld" -o "LPC1769_CMSIS_MCU_blinky.axf"  ./src/cr_startup_lpc176x.o ./src/main.o   -lCMSISv1p30_LPC17xx -lLib_MCU
+c:/labsoft/ee2024/lpcxpresso_6.1.4_194/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/bin/ld.exe: cannot find -lCMSISv1p30_LPC17xx
+c:/labsoft/ee2024/lpcxpresso_6.1.4_194/lpcxpresso/tools/bin/../lib/gcc/arm-none-eabi/4.6.2/../../../../arm-none-eabi/bin/ld.exe: cannot find -lLib_MCU
+collect2: ld returned 1 exit status
+make: *** [LPC1769_CMSIS_MCU_blinky.axf] Error 1
+
+09:54:54 Build Finished (took 780ms)
+

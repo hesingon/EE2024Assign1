@@ -1,0 +1,6 @@
+10:05:07 **** Incremental Build of configuration Debug for project LPC1769_plainC_blinky ****
+make all 
+make: Nothing to be done for `all'.
+
+10:05:07 Build Finished (took 203ms)
+
