@@ -11,9 +11,15 @@ pid_ctrl:
 @ * this is just an example; the actual registers you use may be different
 @ (this will be explained in lectures)
 	PUSH	{R2-R11}
+
+@ Start of executable code
+.section .text
+
+_start:
 	//R0:en,R1:st,R2:sn,R3:enOld,R4:un
 	LDR R2, =sn
 	LDR R3, =enOld
+
 	//if (start) sn = enOld = 0.0;
 	CMP R1, #0
 	ITTT NE
@@ -26,23 +32,22 @@ pid_ctrl:
 	ADD R2, R2, R0
 	//if (sn>9.5) sn=9.5; else if (sn<-9.5) sn=-9.5;
 
-	MOVW R10, #950
+	MOV R10, range
 
 	CMP R2, R10
 	IT GT
-	LDRGT R2, R10
+	MOVGT R2, R10
 
-	ADD R10, R2, #950
+	@ADD R10, R2, #950
 	MOV R11, #0
+	SUB R11, R10
 
-	CMP R10, R11
-	ITT LT
-	LDRLT R2, #0
-	SUBLT R11, #950
+	CMP R2, R11
+	IT LT
+	MOVLT R2, R11
 	//un = Kp*en + Ki*sn + Kd*(en-enOld);
 
-	@Amended because constant operations shouldnt involve constants.
-
+	//Amended because constant operations shouldn't involve constants.
 	MOV R9, Kp
 	MUL R6, R0, R9
 
@@ -56,9 +61,9 @@ pid_ctrl:
 	ADD R4, R6, R7
 	ADD R4, R4, R8
 	//enOld = en;
-	LDR R3, R0
+	STR R0, [R3]
 	//return(un);
-	STR R0, R4
+	MOV R0, R4
 
 
 @  Write PID controller function in assembly language here
@@ -67,7 +72,7 @@ pid_ctrl:
 @ POP the registers you modify, e.g. R2, R3, R4 and R5*, from the stack
 @ * this is just an example; the actual registers you use may be different
 @ (this will be explained in lectures)
-	POP	{R2-R5}
+	POP	{R2-R11}
  	BX	LR
 
  Kp:
@@ -76,7 +81,10 @@ pid_ctrl:
  	.word 10
  Kd:
  	.word 80
- @ Store result in SRM (4 bytes)
+ range:
+ 	.word 950
+ @ Store result in SRAM (4 bytes)
  	.lcomm enOld 4
  	.lcomm sn 4
+ 	.lcomm un 4
 	.end

@@ -73,7 +73,9 @@ int main(void)
 
         //  Call the assembly language function pid_ctrl() here
         e*=100;
-        u = pid_ctrl(e, st)/100.0;
+        u = pid_ctrl(e, st);
+        u = u/10000.0;
+        e = e/100;
 
        	printf("%lf\n",e);
     }
