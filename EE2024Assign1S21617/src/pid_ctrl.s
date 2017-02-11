@@ -10,59 +10,56 @@ pid_ctrl:
 @ PUSH the registers you modify, e.g. R2, R3, R4 and R5*, to the stack
 @ * this is just an example; the actual registers you use may be different
 @ (this will be explained in lectures)
-	PUSH	{R2-R11}
+	PUSH	{R2-R12}
 
-@ Start of executable code
-.section .text
-
-_start:
 	//R0:en,R1:st,R2:sn,R3:enOld,R4:un
 	LDR R2, =sn
 	LDR R3, =enOld
+	LDR R9, ZERO
 
 	//if (start) sn = enOld = 0.0;
-	CMP R1, #0
-	ITTT NE
-	//e.g. MOV R6, #0
-	//e.g. STR [R2], R6
-	MOVNE R9, #0
+	CMP R1, 0
+	ITT NE
 	STRNE R9, [R2]
     STRNE R9, [R3]
+
+
+	LDR R5, [R2] //R5 contains the value of sn
+	LDR R6, [R3] //R12 contains the value of enOld
+
 	//sn=sn+en
-	ADD R2, R2, R0
+	ADD R5, R5, R0
 	//if (sn>9.5) sn=9.5; else if (sn<-9.5) sn=-9.5;
 
-	MOV R10, range
-
-	CMP R2, R10
+	LDR R10, upLimit
+	CMP R5, R10
 	IT GT
-	MOVGT R2, R10
+	MOVGT R5, R10
 
-	@ADD R10, R2, #950
-	MOV R11, #0
-	SUB R11, R10
-
-	CMP R2, R11
+	LDR R10, downLimit
+	CMP R5, R10
 	IT LT
-	MOVLT R2, R11
+	MOVLT R5, R10
 	//un = Kp*en + Ki*sn + Kd*(en-enOld);
 
-	//Amended because constant operations shouldn't involve constants.
-	MOV R9, Kp
-	MUL R6, R0, R9
+	LDR R9, Kp
+	MUL R12, R9, R0  //R12 = Kp*en
 
-	MOV R9, Ki
-	MUL R7, R2, R9
+	LDR R9, Ki
+	MUL R7, R9, R5		//R7 = Ki*sn
 
-	SUB R8, R2, R3
+	SUB R8, R0, R6		//R8 = en - enOld
 
-	MOV R9, Kd
-	MUL R8, R8, R9
-	ADD R4, R6, R7
-	ADD R4, R4, R8
+	LDR R9, Kd
+	MUL R8, R9, R8		//R8 = Kd*(en-enOld)
+
+	ADD R4, R12, R7
+	ADD R4, R4, R8		//R4 = Kp*en + Ki*sn + Kd*(en-enOld);
 	//enOld = en;
-	STR R0, [R3]
+	//STR R0, [R3]
+	//STR R5, [R2] //store R5 back into R2
 	//return(un);
+	MOV R3, R0
 	MOV R0, R4
 
 
@@ -72,7 +69,7 @@ _start:
 @ POP the registers you modify, e.g. R2, R3, R4 and R5*, from the stack
 @ * this is just an example; the actual registers you use may be different
 @ (this will be explained in lectures)
-	POP	{R2-R11}
+	POP	{R2-R12}
  	BX	LR
 
  Kp:
@@ -81,8 +78,12 @@ _start:
  	.word 10
  Kd:
  	.word 80
- range:
+upLimit:
  	.word 950
+downLimit:
+	.word -950
+ZERO:
+	.word 0
  @ Store result in SRAM (4 bytes)
  	.lcomm enOld 4
  	.lcomm sn 4
