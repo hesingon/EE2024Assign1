@@ -29,19 +29,22 @@ pid_ctrl:
 
 	//sn=sn+en
 	ADD R5, R5, R0
-	//if (sn>9.5) sn=9.5; else if (sn<-9.5) sn=-9.5;
 
-	LDR R10, upLimit
+	//if (sn>9.5) sn=9.5; else if (sn<-9.5) sn=-9.5;
+	LDR R10, topLimit
 	CMP R5, R10
 	IT GT
 	MOVGT R5, R10
 
-	LDR R10, downLimit
+	LDR R10, bottomLimit
 	CMP R5, R10
 	IT LT
 	MOVLT R5, R10
-	//un = Kp*en + Ki*sn + Kd*(en-enOld);
 
+	//storing updated value back to R2
+	STR R5, [R2]
+
+	//un = Kp*en + Ki*sn + Kd*(en-enOld);
 	LDR R9, Kp
 	MUL R12, R9, R0  //R12 = Kp*en
 
@@ -55,9 +58,10 @@ pid_ctrl:
 
 	ADD R4, R12, R7
 	ADD R4, R4, R8		//R4 = Kp*en + Ki*sn + Kd*(en-enOld);
+
 	//enOld = en;
-	//STR R0, [R3]
-	//STR R5, [R2] //store R5 back into R2
+	STR R0, [R3]	//storing current en value to enOld's memory space
+
 	//return(un);
 	MOV R3, R0
 	MOV R0, R4
@@ -78,9 +82,9 @@ pid_ctrl:
  	.word 10
  Kd:
  	.word 80
-upLimit:
+topLimit:
  	.word 950
-downLimit:
+bottomLimit:
 	.word -950
 ZERO:
 	.word 0
