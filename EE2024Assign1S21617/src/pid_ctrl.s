@@ -15,7 +15,7 @@ pid_ctrl:
 	//R0:en,R1:st,R2:sn,R3:enOld,R4:un
 	LDR R2, =sn
 	LDR R3, =enOld
-	LDR R9, ZERO
+	MOV R9, 0
 
 	//if (start) sn = enOld = 0.0;
 	CMP R1, 0
@@ -45,15 +45,15 @@ pid_ctrl:
 	STR R5, [R2]
 
 	//un = Kp*en + Ki*sn + Kd*(en-enOld);
-	LDR R9, Kp
+	MOV R9, 25
 	MUL R12, R9, R0  //R12 = Kp*en
 
-	LDR R9, Ki
+	MOV R9, 10
 	MUL R7, R9, R5		//R7 = Ki*sn
 
 	SUB R8, R0, R6		//R8 = en - enOld
 
-	LDR R9, Kd
+	MOV R9, 80
 	MUL R8, R9, R8		//R8 = Kd*(en-enOld)
 
 	ADD R4, R12, R7
@@ -76,18 +76,19 @@ pid_ctrl:
 	POP	{R2-R12}
  	BX	LR
 
- Kp:
+/*Kp:
  	.word 25
  Ki:
  	.word 10
  Kd:
- 	.word 80
+ 	.word 80*/
 topLimit:
  	.word 950
 bottomLimit:
 	.word -950
-ZERO:
-	.word 0
+/*ZERO:
+	.word 0*/
+
  @ Store result in SRAM (4 bytes)
  	.lcomm enOld 4
  	.lcomm sn 4
